@@ -4,5 +4,9 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"typescript.tsserver.experimental.enableProjectDiagnostics": true,
+		"js/ts.implicitProjectConfig.checkJs": true,
+		"js/ts.implicitProjectConfig.experimentalDecorators": true
+	}
 }

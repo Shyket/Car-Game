@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.hide {
+  display: none;
+}
+
+.car {
+  color: white;
+  height: 50px;
+  width: 50px;
+  background: blue;
+  position: absolute;
+  top: 100px;
+  left: 30px;
+}
+
+.translateDown {
+  -webkit-transform: translateX(3px);
+          transform: translateX(3px);
+}
+
+section.scorebar {
+  width: 100vw;
+  height: 8vh;
+}
+
+section.scorebar div.container {
+  background: black;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: white;
+}
+
+section.scorebar div.container h3.game-over {
+  margin-top: 0.2em;
+}
+
+section.scorebar div.container h3.score {
+  margin-top: 0.5em;
+}
+
+section.gameplay {
+  width: 100vw;
+  height: 92vh;
+}
+
+section.gameplay .container {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+}
+
+section.gameplay .container .instruction {
+  background: red;
+  text-align: center;
+  position: absolute;
+  top: 2em;
+  width: 500px;
+  color: white;
+  padding: 1em;
+  cursor: pointer;
+  z-index: 2;
+}
+
+section.gameplay .container .road {
+  width: 500px;
+  height: 100%;
+  background: black;
+  position: relative;
+  z-index: -2;
+  overflow: hidden;
+}
+/*# sourceMappingURL=style.css.map */

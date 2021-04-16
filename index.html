@@ -1,12 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car Game</title>
+    <link rel="stylesheet" href="CSS/style.css" />
+  </head>
+  <body>
+    <section class="scorebar">
+      <div class="container">
+        <h3 class="game-over">Game Over</h3>
+        <h3 class="score">Score was <span id="score"></span></h3>
+      </div>
+    </section>
+    <section class="gameplay">
+      <div class="container">
+        <div class="instruction" id="instruction">
+          <p>Press here to Start</p>
+          <p>Arrow keys to Move</p>
+          <p>If you hit another car you will lose.</p>
+        </div>
+        <div id="road" class="road"></div>
+      </div>
+    </section>
+    <script>
+      const instruction = document.querySelector("#instruction");
+      const score = document.querySelector("#score");
+      const road = document.querySelector("#road");
+      const roadHeight = road.offsetHeight;
+      const roadWidth = road.offsetWidth;
+      const speed = 1;
+
+      instruction.addEventListener("click", () => {
+        console.log("game started");
+        startGame();
+      });
+      const startGame = () => {
+        let car = document.createElement("div");
+        car.innerText = "car";
+        instruction.classList.add("hide");
+        road.appendChild(car);
+        car.classList.add("car");
+        window.requestAnimationFrame(gameplay);
+      };
+      const gameplay = () => {
+        const car = document.querySelector(".car");
+        if (keys.ArrowDown && (car.offsetHeight+car.offsetTop) <=roadHeight) {
+          car.style.top = car.offsetTop + speed + "px";
+        }
+        if (keys.ArrowLeft && car.offsetLeft > 0) {
+          car.style.left = car.offsetLeft - speed + "px";
+        }
+        if (keys.ArrowRight && (car.offsetWidth+car.offsetLeft) <=roadWidth) {
+          car.style.left = car.offsetLeft + speed + "px";
+        }
+        if (keys.ArrowUp && car.offsetTop > 0) {
+          car.style.top = car.offsetTop - speed + "px";
+        }
+        window.requestAnimationFrame(gameplay);
+      };
+
+      document.addEventListener("keydown", (e) => {
+        pressOn(e);
+      });
+      document.addEventListener("keyup", (e) => {
+        pressOff(e);
+      });
+
+      let keys = {
+        ArrowUp: false,
+        ArrowRight: false,
+        ArrowLeft: false,
+        ArrowDown: false,
+      };
+
+      const pressOn = (e) => {
+        e.preventDefault();
+        keys[e.key] = true;
+      };
+
+      const pressOff = (e) => {
+        e.preventDefault();
+        keys[e.key] = false;
+      };
+    </script>
+  </body>
 </html>

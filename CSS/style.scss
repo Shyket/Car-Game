@@ -1,0 +1,75 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.hide {
+  display: none;
+}
+
+.car {
+  color: white;
+  height: 50px;
+  width: 50px;
+  background: blue;
+  position: absolute;
+  top: 100px;
+  left: 30px;
+}
+
+.translateDown{
+    transform: translateX(3px);
+}
+
+section.scorebar {
+  width: 100vw;
+  height: 8vh;
+  div.container {
+    background: black;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    h3.game-over {
+      margin-top: 0.2em;
+    }
+    h3.score {
+      margin-top: 0.5em;
+    }
+  }
+}
+
+section.gameplay {
+  width: 100vw;
+  height: 92vh;
+  .container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    .instruction {
+      background: red;
+      text-align: center;
+      position: absolute;
+      top: 2em;
+      width: 500px;
+      color: white;
+      padding: 1em;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .road {
+      width: 500px;
+      height: 100%;
+      background: black;
+      position: relative;
+      z-index: -2;
+      overflow: hidden;
+    }
+  }
+}
