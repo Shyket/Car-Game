@@ -9,7 +9,7 @@
   display: none;
 }
 
-.car {
+.car, .enemy {
   color: white;
   height: 50px;
   width: 50px;
@@ -17,6 +17,10 @@
   position: absolute;
   top: 500px;
   left: 30px;
+}
+
+.enemy {
+  background: red;
 }
 
 .translateDown {

@@ -34,7 +34,6 @@
       const speed = 1;
 
       instruction.addEventListener("click", () => {
-        console.log("game started");
         startGame();
       });
       const startGame = () => {
@@ -49,10 +48,37 @@
           road.appendChild(roadLine);
           roadLine.style.top = i * (roadLine.offsetHeight + roadLineGap) + "px";
         }
+        for (i = 1; i < 4; i++) {
+          let enemy = document.createElement("div");
+          enemy.classList.add("enemy");
+          road.appendChild(enemy);
+          enemy.style.top = -Math.round(i * Math.random() * roadHeight) + "px";
+          enemy.style.left = Math.round(Math.random() * roadWidth) + "px";
+        }
         window.requestAnimationFrame(gameplay);
       };
-
+      function getRndInteger(min, max) {
+        return Math.round(Math.random() * (max - min)) + min;
+      }
+      const moveEnemies = () => {
+        const enemies = document.querySelectorAll(".enemy");
+        enemies.forEach((enemy) => {
+          enemy.style.top = enemy.offsetTop + speed * 2 + "px";
+          if (enemy.offsetTop + enemy.offsetHeight >= roadHeight) {
+            enemy.style.top =
+              -Math.round(getRndInteger(0.5,1.5) * roadHeight)/2 + "px";
+            enemy.style.left = Math.random() * roadWidth*4/5 + enemy.offsetWidth + "px";
+          }
+          // if (
+          //   enemy.offsetLeft >= 0 &&
+          //   enemy.offsetLeft + enemy.offsetWidth <= roadWidth
+          // ) {
+          //   enemy.style.left = enemy.offsetLeft + getRndInteger(-3,3) * speed + "px";
+          // }
+        });
+      };
       const gameplay = () => {
+        moveEnemies();
         const roadLines = document.querySelectorAll(".road-line");
         const car = document.querySelector(".car");
 
@@ -60,8 +86,9 @@
           car.style.top = car.offsetTop + speed + "px";
           roadLines.forEach((roadLine) => {
             roadLine.style.top = roadLine.offsetTop - speed + "px";
-            if(roadLine.offsetTop <= -roadLine.offsetHeight){
-              roadLine.style.top = roadLineGap + roadLine.offsetHeight + road.offsetHeight + "px";
+            if (roadLine.offsetTop <= -roadLine.offsetHeight) {
+              roadLine.style.top =
+                roadLineGap + roadLine.offsetHeight + road.offsetHeight + "px";
             }
           });
         }
@@ -75,8 +102,12 @@
           car.style.top = car.offsetTop - speed + "px";
           roadLines.forEach((roadLine) => {
             roadLine.style.top = roadLine.offsetTop + speed + "px";
-            if(roadLine.offsetTop >= roadLine.offsetHeight+ road.offsetHeight){
-              roadLine.style.top = -(roadLine.offsetHeight+roadLineGap) + "px";
+            if (
+              roadLine.offsetTop >=
+              roadLine.offsetHeight + road.offsetHeight
+            ) {
+              roadLine.style.top =
+                -(roadLine.offsetHeight + roadLineGap) + "px";
             }
           });
         }
