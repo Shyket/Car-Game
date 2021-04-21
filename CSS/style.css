@@ -15,13 +15,22 @@
   width: 50px;
   background: blue;
   position: absolute;
-  top: 100px;
+  top: 500px;
   left: 30px;
 }
 
 .translateDown {
   -webkit-transform: translateX(3px);
           transform: translateX(3px);
+}
+
+.road-line {
+  width: 10px;
+  height: 50px;
+  background: white;
+  position: absolute;
+  left: 240px;
+  z-index: -1;
 }
 
 section.scorebar {

@@ -30,6 +30,7 @@
       const road = document.querySelector("#road");
       const roadHeight = road.offsetHeight;
       const roadWidth = road.offsetWidth;
+      const roadLineGap = 30;
       const speed = 1;
 
       instruction.addEventListener("click", () => {
@@ -42,21 +43,42 @@
         instruction.classList.add("hide");
         road.appendChild(car);
         car.classList.add("car");
+        for (i = 0; i < 20; i++) {
+          let roadLine = document.createElement("div");
+          roadLine.classList.add("road-line");
+          road.appendChild(roadLine);
+          roadLine.style.top = i * (roadLine.offsetHeight + roadLineGap) + "px";
+        }
         window.requestAnimationFrame(gameplay);
       };
+
       const gameplay = () => {
+        const roadLines = document.querySelectorAll(".road-line");
         const car = document.querySelector(".car");
-        if (keys.ArrowDown && (car.offsetHeight+car.offsetTop) <=roadHeight) {
+
+        if (keys.ArrowDown && car.offsetHeight + car.offsetTop <= roadHeight) {
           car.style.top = car.offsetTop + speed + "px";
+          roadLines.forEach((roadLine) => {
+            roadLine.style.top = roadLine.offsetTop - speed + "px";
+            if(roadLine.offsetTop <= -roadLine.offsetHeight){
+              roadLine.style.top = roadLineGap + roadLine.offsetHeight + road.offsetHeight + "px";
+            }
+          });
         }
         if (keys.ArrowLeft && car.offsetLeft > 0) {
           car.style.left = car.offsetLeft - speed + "px";
         }
-        if (keys.ArrowRight && (car.offsetWidth+car.offsetLeft) <=roadWidth) {
+        if (keys.ArrowRight && car.offsetWidth + car.offsetLeft <= roadWidth) {
           car.style.left = car.offsetLeft + speed + "px";
         }
         if (keys.ArrowUp && car.offsetTop > 0) {
           car.style.top = car.offsetTop - speed + "px";
+          roadLines.forEach((roadLine) => {
+            roadLine.style.top = roadLine.offsetTop + speed + "px";
+            if(roadLine.offsetTop >= roadLine.offsetHeight+ road.offsetHeight){
+              roadLine.style.top = -(roadLine.offsetHeight+roadLineGap) + "px";
+            }
+          });
         }
         window.requestAnimationFrame(gameplay);
       };
