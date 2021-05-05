@@ -8,110 +8,187 @@
     <link rel="stylesheet" href="CSS/style.css" />
   </head>
   <body>
-    <section class="scorebar">
-      <div class="container">
-        <h3 class="game-over">Game Over</h3>
-        <h3 class="score">Score was <span id="score"></span></h3>
-      </div>
-    </section>
     <section class="gameplay">
       <div class="container">
-        <div class="instruction" id="instruction">
-          <p>Press here to Start</p>
-          <p>Arrow keys to Move</p>
-          <p>If you hit another car you will lose.</p>
+        <div id="road">
+          <p id="score"></p>
+          <div id="nav">
+            <div id="menu">
+              <p id="final-score"></p>
+              <button id="new-game-button">New Game</button>
+              <button id="rules-button">Rules</button>
+              <button id="exit-button">Exit</button>
+            </div>
+            <div id="rules">
+              <p>Arrow keys to Move</p>
+              <p>If you hit another car you will lose.</p>
+              <button id="back-button">Back</button>
+            </div>
+          </div>
         </div>
-        <div id="road" class="road"></div>
       </div>
     </section>
+
     <script>
-      const instruction = document.querySelector("#instruction");
-      const score = document.querySelector("#score");
       const road = document.querySelector("#road");
       const roadHeight = road.offsetHeight;
       const roadWidth = road.offsetWidth;
       const roadLineGap = 30;
       const speed = 1;
+      var isGameOver = true;
+      let newScore = 0;
 
-      instruction.addEventListener("click", () => {
-        startGame();
+      document.querySelector("#back-button").addEventListener("click", () => {
+        document.querySelector("#rules").style.display = "none";
+        document.querySelector("#menu").style.display = "flex";
       });
-      const startGame = () => {
+      document
+        .querySelector("#new-game-button")
+        .addEventListener("click", () => {
+          document.querySelector("#nav").style.display = "none";
+          startGame();
+        });
+      document.querySelector("#rules-button").addEventListener("click", () => {
+        document.querySelector("#rules").style.display = "flex";
+        document.querySelector("#menu").style.display = "none";
+      });
+
+      const createCar = () => {
         let car = document.createElement("div");
         car.innerText = "car";
-        instruction.classList.add("hide");
-        road.appendChild(car);
         car.classList.add("car");
+        return car;
+      };
+
+      const createRoadLines = () => {
         for (i = 0; i < 20; i++) {
           let roadLine = document.createElement("div");
           roadLine.classList.add("road-line");
           road.appendChild(roadLine);
           roadLine.style.top = i * (roadLine.offsetHeight + roadLineGap) + "px";
         }
+      };
+
+      const createEnemyCar = () => {
         for (i = 1; i < 4; i++) {
           let enemy = document.createElement("div");
           enemy.classList.add("enemy");
           road.appendChild(enemy);
+          enemy.pos = i;
           enemy.style.top = -Math.round(i * Math.random() * roadHeight) + "px";
           enemy.style.left = Math.round(Math.random() * roadWidth) + "px";
         }
+      };
+
+      const startGame = () => {
+        isGameOver = false;
+        newScore = 0;
+        setScore();
+        const car = createCar();
+        road.appendChild(car);
+        createRoadLines();
+        createEnemyCar();
         window.requestAnimationFrame(gameplay);
       };
-      function getRndInteger(min, max) {
-        return Math.round(Math.random() * (max - min)) + min;
-      }
-      const moveEnemies = () => {
-        const enemies = document.querySelectorAll(".enemy");
+
+      const moveEnemies = (enemies) => {
         enemies.forEach((enemy) => {
           enemy.style.top = enemy.offsetTop + speed * 2 + "px";
           if (enemy.offsetTop + enemy.offsetHeight >= roadHeight) {
-            enemy.style.top =
-              -Math.round(getRndInteger(0.5,1.5) * roadHeight)/2 + "px";
-            enemy.style.left = Math.random() * roadWidth*4/5 + enemy.offsetWidth + "px";
+            enemy.style.top = (-enemy.pos * roadHeight) / 2 + "px";
+            enemy.style.left = Math.random() * roadWidth + "px";
           }
-          // if (
-          //   enemy.offsetLeft >= 0 &&
-          //   enemy.offsetLeft + enemy.offsetWidth <= roadWidth
-          // ) {
-          //   enemy.style.left = enemy.offsetLeft + getRndInteger(-3,3) * speed + "px";
-          // }
         });
       };
-      const gameplay = () => {
-        moveEnemies();
-        const roadLines = document.querySelectorAll(".road-line");
-        const car = document.querySelector(".car");
 
-        if (keys.ArrowDown && car.offsetHeight + car.offsetTop <= roadHeight) {
-          car.style.top = car.offsetTop + speed + "px";
-          roadLines.forEach((roadLine) => {
-            roadLine.style.top = roadLine.offsetTop - speed + "px";
-            if (roadLine.offsetTop <= -roadLine.offsetHeight) {
-              roadLine.style.top =
-                roadLineGap + roadLine.offsetHeight + road.offsetHeight + "px";
-            }
-          });
+      const animateRoadLines = (roadLines) => {
+        roadLines.forEach((roadLine) => {
+          roadLine.style.top = roadLine.offsetTop + speed + "px";
+          if (roadLine.offsetTop >= roadLine.offsetHeight + road.offsetHeight) {
+            roadLine.style.top = -(roadLine.offsetHeight + roadLineGap) + "px";
+          }
+        });
+      };
+
+      const navigateCar = (car) => {
+        if (!isGameOver) {
+          if (
+            keys.ArrowDown &&
+            car.offsetHeight + car.offsetTop <= roadHeight
+          ) {
+            car.style.top = car.offsetTop + speed + "px";
+          }
+
+          if (keys.ArrowLeft && car.offsetLeft > 0) {
+            car.style.left = car.offsetLeft - speed + "px";
+          }
+          if (
+            keys.ArrowRight &&
+            car.offsetWidth + car.offsetLeft <= roadWidth
+          ) {
+            car.style.left = car.offsetLeft + speed + "px";
+          }
+          if (keys.ArrowUp && car.offsetTop > 0) {
+            car.style.top = car.offsetTop - speed + "px";
+          }
         }
-        if (keys.ArrowLeft && car.offsetLeft > 0) {
-          car.style.left = car.offsetLeft - speed + "px";
+      };
+
+      const detectCollision = (car, enemies) => {
+        let carRect = car.getBoundingClientRect();
+        var collid = false;
+
+        enemies.forEach((enemy) => {
+          let enemyRect = enemy.getBoundingClientRect();
+
+          var isCollid =
+            carRect.top > enemyRect.bottom ||
+            carRect.bottom < enemyRect.top ||
+            carRect.right < enemyRect.left ||
+            carRect.left > enemyRect.right;
+          if (!isCollid) {
+            collid = true;
+          }
+        });
+
+        return collid;
+      };
+
+      const setScore = () => {
+        document.getElementById("score").innerHTML = newScore;
+      };
+
+      const updateScore = () => {
+        if (!isGameOver) {
+          newScore++;
         }
-        if (keys.ArrowRight && car.offsetWidth + car.offsetLeft <= roadWidth) {
-          car.style.left = car.offsetLeft + speed + "px";
+      };
+
+      const endGame = () => {
+        isGameOver = true;
+        document.getElementById("score").style.display = "none";
+        document.getElementById("final-score").style.display = "block";
+        document.getElementById("final-score").innerHTML = "Score " + newScore;
+        document.getElementById("nav").style.display = "flex";
+      };
+
+      const gameplay = () => {
+        if (!isGameOver) {
+          updateScore();
+          setScore();
+          let car = document.querySelector(".car");
+          moveEnemies(document.querySelectorAll(".enemy"));
+          animateRoadLines(document.querySelectorAll(".road-line"));
+          navigateCar(car);
+          let isCollid = detectCollision(
+            document.querySelector(".car"),
+            document.querySelectorAll(".enemy")
+          );
+          if (isCollid) {
+            endGame();
+          }
+          let reqID = window.requestAnimationFrame(gameplay);
         }
-        if (keys.ArrowUp && car.offsetTop > 0) {
-          car.style.top = car.offsetTop - speed + "px";
-          roadLines.forEach((roadLine) => {
-            roadLine.style.top = roadLine.offsetTop + speed + "px";
-            if (
-              roadLine.offsetTop >=
-              roadLine.offsetHeight + road.offsetHeight
-            ) {
-              roadLine.style.top =
-                -(roadLine.offsetHeight + roadLineGap) + "px";
-            }
-          });
-        }
-        window.requestAnimationFrame(gameplay);
       };
 
       document.addEventListener("keydown", (e) => {
