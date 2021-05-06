@@ -34,7 +34,7 @@
       const roadHeight = road.offsetHeight;
       const roadWidth = road.offsetWidth;
       const roadLineGap = 30;
-      const speed = 1;
+      const speed = 2;
       var isGameOver = true;
       let newScore = 0;
 
@@ -59,6 +59,7 @@
         car.innerText = "car";
         car.classList.add("car");
         car.style.background = generateRandomColor();
+        car.speed = 2;
         return car;
       };
 
@@ -72,20 +73,26 @@
       };
 
       const createEnemyCar = () => {
-        for (i = 1; i < 6; i++) {
+        for (i = 1; i < 8; i++) {
           let enemy = document.createElement("div");
           enemy.classList.add("enemy");
           road.appendChild(enemy);
           enemy.pos = i;
+          enemy.speed = 2;
+          enemy.innerHTML = i;
           enemy.style.background = generateRandomColor();
-          enemy.style.top = -Math.round(i * Math.random() * roadHeight) + "px";
-          enemy.style.left = Math.round(Math.random() * roadWidth) + "px";
+          enemy.style.top = -i * roadHeight + "px";
+          enemy.style.left = Math.random() * (roadWidth - enemy.offsetWidth) + "px";
         }
       };
 
       const generateRandomColor = () => {
         function color() {
-          return Math.round(Math.random() * 255);
+          let col = Math.round(Math.random() * 255);
+          if (col < 150) {
+            col += 100;
+          }
+          return col;
         }
         return "rgb(" + color() + "," + color() + "," + color() + ")";
       };
@@ -103,16 +110,10 @@
 
       const moveEnemies = (enemies) => {
         enemies.forEach((enemy) => {
-          enemy.style.top = enemy.offsetTop + speed * 2 + "px";
+          enemy.style.top = enemy.offsetTop + enemy.speed * 2 + "px";
 
-          if (enemy.offsetTop + enemy.offsetHeight >= roadHeight) {
-            enemy.style.top =
-              -(
-                Math.random() * enemy.pos * roadHeight +
-                Math.random() * enemy.offsetHeight
-              ) /
-                2 +
-              "px";
+          if (enemy.offsetTop >= roadHeight) {
+            enemy.style.top =  Math.round(-roadHeight*enemy.pos -roadHeight*Math.random()/2 - Math.random()*enemy.offsetHeight) + "px";
             enemy.style.left =
               Math.random() * (roadWidth - enemy.offsetWidth) + "px";
             enemy.style.background = generateRandomColor();
@@ -135,20 +136,20 @@
             keys.ArrowDown &&
             car.offsetHeight + car.offsetTop <= roadHeight
           ) {
-            car.style.top = car.offsetTop + speed + "px";
+            car.style.top = car.offsetTop + car.speed/2 + "px";
           }
 
           if (keys.ArrowLeft && car.offsetLeft > 0) {
-            car.style.left = car.offsetLeft - speed + "px";
+            car.style.left = car.offsetLeft - car.speed/2 + "px";
           }
           if (
             keys.ArrowRight &&
             car.offsetWidth + car.offsetLeft <= roadWidth
           ) {
-            car.style.left = car.offsetLeft + speed + "px";
+            car.style.left = car.offsetLeft + car.speed/2 + "px";
           }
           if (keys.ArrowUp && car.offsetTop > 0) {
-            car.style.top = car.offsetTop - speed + "px";
+            car.style.top = car.offsetTop - car.speed + "px";
           }
         }
       };
