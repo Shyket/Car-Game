@@ -46,7 +46,7 @@
         .querySelector("#new-game-button")
         .addEventListener("click", () => {
           document.querySelector("#nav").style.display = "none";
-
+          
           startGame();
         });
       document.querySelector("#rules-button").addEventListener("click", () => {
@@ -56,9 +56,7 @@
 
       const createCar = () => {
         let car = document.createElement("div");
-        car.innerText = "car";
         car.classList.add("car");
-        car.style.background = generateRandomColor();
         car.speed = 2;
         return car;
       };
@@ -75,14 +73,14 @@
       const createEnemyCar = () => {
         for (i = 1; i < 8; i++) {
           let enemy = document.createElement("div");
-          enemy.classList.add("enemy");
           road.appendChild(enemy);
+          enemy.classList.add("enemy");
           enemy.pos = i;
           enemy.speed = 2;
-          enemy.innerHTML = i;
-          enemy.style.background = generateRandomColor();
+          //enemy.style.backgroundImage = "url(../assets/car_topview.svg)";
           enemy.style.top = -i * roadHeight + "px";
-          enemy.style.left = Math.random() * (roadWidth - enemy.offsetWidth) + "px";
+          enemy.style.left =
+            Math.random() * (roadWidth - enemy.offsetWidth) + "px";
         }
       };
 
@@ -113,7 +111,12 @@
           enemy.style.top = enemy.offsetTop + enemy.speed * 2 + "px";
 
           if (enemy.offsetTop >= roadHeight) {
-            enemy.style.top =  Math.round(-roadHeight*enemy.pos -roadHeight*Math.random()/2 - Math.random()*enemy.offsetHeight) + "px";
+            enemy.style.top =
+              Math.round(
+                -roadHeight * enemy.pos -
+                  (roadHeight * Math.random()) / 2 -
+                  Math.random() * enemy.offsetHeight
+              ) + "px";
             enemy.style.left =
               Math.random() * (roadWidth - enemy.offsetWidth) + "px";
             enemy.style.background = generateRandomColor();
@@ -136,17 +139,17 @@
             keys.ArrowDown &&
             car.offsetHeight + car.offsetTop <= roadHeight
           ) {
-            car.style.top = car.offsetTop + car.speed/2 + "px";
+            car.style.top = car.offsetTop + car.speed / 2 + "px";
           }
 
           if (keys.ArrowLeft && car.offsetLeft > 0) {
-            car.style.left = car.offsetLeft - car.speed/2 + "px";
+            car.style.left = car.offsetLeft - car.speed / 2 + "px";
           }
           if (
             keys.ArrowRight &&
             car.offsetWidth + car.offsetLeft <= roadWidth
           ) {
-            car.style.left = car.offsetLeft + car.speed/2 + "px";
+            car.style.left = car.offsetLeft + car.speed / 2 + "px";
           }
           if (keys.ArrowUp && car.offsetTop > 0) {
             car.style.top = car.offsetTop - car.speed + "px";

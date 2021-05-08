@@ -15,10 +15,11 @@
 
 .car,
 .enemy {
-  color: white;
-  height: 50px;
-  width: 50px;
-  background: blue;
+  width: 44px;
+  height: 100px;
+  background-image: url(../assets/car_topview.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
   position: absolute;
   top: 500px;
   left: 30px;
@@ -26,9 +27,6 @@
 }
 
 .enemy {
-  background: red;
-  color: red;
-  font-size:2em;
 }
 
 .translateDown {
